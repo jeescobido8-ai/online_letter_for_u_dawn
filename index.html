@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Online Letter</title>
+
+<style>
+* { box-sizing: border-box; font-family: 'Georgia', serif; }
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container { width: 100%; max-width: 420px; padding: 20px; text-align: center; }
+
+.envelope {
+    width: 300px;
+    height: 190px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin: auto;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+.rose {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    background: white;
+    border-radius: 50%;
+    padding: 8px;
+    border: 2px solid #c62828;
+    z-index: 3;
+    transition: all 0.6s ease;
+}
+
+.letter {
+    position: fixed;
+    left: 50%;
+    bottom: -120%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 520px;
+    height: 85vh;
+    background: #faf7f2;
+    border-radius: 10px;
+    padding: 22px;
+    border: 1px solid #d6cfc7;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    overflow-y: auto;
+    transition: bottom 0.8s ease;
+    z-index: 10;
+}
+
+.letter h3 { text-align: center; color: #c62828; margin-top: 0; }
+.letter p { line-height: 1.6; color: #333; font-size: 15px; }
+
+.open .letter { bottom: 5%; }
+.open .rose { opacity: 0.15; transform: translate(-50%, -50%) scale(0.8); z-index: 1; }
+
+.hint { margin-top: 12px; color: #2e7d32; font-size: 14px; }
+
+/* Rose falling animation */
+.rose-fall {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    background: red;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 20;
+    animation: fall 4s linear forwards;
+}
+
+@keyframes fall {
+    0% { top: -50px; opacity: 1; transform: rotate(0deg); }
+    100% { top: 100vh; opacity: 0; transform: rotate(360deg); }
+}
+
+/* Firework animation */
+.firework {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: gold;
+    pointer-events: none;
+    z-index: 25;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    0% { transform: scale(0); opacity: 1; }
+    50% { transform: scale(5); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+@media (max-width: 480px) { 
+    .envelope { width: 260px; height: 170px; } 
+    .letter { height: 88vh; } 
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="envelope" id="envelope">
+        <div class="rose">🌹</div>
+    </div>
+
+    <div class="letter" id="letter">
+        <h3>Dear Dawn,</h3>
+        <p>
+            First of all, HAPPY BIRTHDAY! Today is the day wherein the most beautiful, the most special one, the one and amazing person was born on the day wherein love is celebrated. It is indeed a day of love since a lovely woman, which is you, is born.
+            <br><br>You are nothing but a blessing in everyone whom met you, including to me. You were such an amazing blessing to me, and I am so blessed na nakilala kita and naging kaibigan. To be honest, you're not just a friend for me, you're more special than that. However, I knew rin na I am not worthy enough kaya naman, just being your friend is something na makes me so happy pa rin naman in the end.
+            <br><br>I do wish you all the best the this world could offer. I do wish for your continued happiness in life. I do wish as well na lahat ng dreams mo pa is ma-achieve mo. I do hope din na you will stay such an amazing person just like who you are right now. And I want you to know na I will continue to be your No. 1 fan and admirer, and most importantly, your friend :)
+            <br><br>Yours truly,
+		<br>Jeremy
+
+            <br><br>Click the letter to close! 🌹🎇
+        </p>
+    </div>
+
+    <div class="hint">Tap the envelope to open</div>
+</div>
+
+<script>
+const envelope = document.getElementById("envelope");
+const letter = document.getElementById("letter");
+const body = document.body;
+
+let roseInterval, fireworkInterval;
+
+// Function to start animations
+function startAnimations() {
+    // Rose shower
+    roseInterval = setInterval(() => {
+        const rose = document.createElement("div");
+        rose.classList.add("rose-fall");
+        rose.style.left = Math.random() * window.innerWidth + "px";
+        rose.style.animationDuration = (3 + Math.random() * 2) + "s";
+        document.body.appendChild(rose);
+        rose.addEventListener("animationend", () => rose.remove());
+    }, 200); // every 0.2s
+
+    // Fireworks
+    fireworkInterval = setInterval(() => {
+        const firework = document.createElement("div");
+        firework.classList.add("firework");
+        firework.style.left = Math.random() * window.innerWidth + "px";
+        firework.style.top = Math.random() * window.innerHeight / 2 + "px"; // upper half
+        document.body.appendChild(firework);
+        firework.addEventListener("animationend", () => firework.remove());
+    }, 300); // every 0.3s
+}
+
+// Function to stop animations
+function stopAnimations() {
+    clearInterval(roseInterval);
+    clearInterval(fireworkInterval);
+}
+
+// Envelope click → toggle letter
+envelope.addEventListener("click", () => {
+    const isOpen = body.classList.toggle("open");
+    if (isOpen) startAnimations();
+    else stopAnimations();
+});
+
+// Letter click → close letter
+letter.addEventListener("click", () => {
+    body.classList.remove("open");
+    stopAnimations();
+});
+</script>
+
+</body>
+</html>
